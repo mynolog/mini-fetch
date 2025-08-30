@@ -1,0 +1,32 @@
+{
+  "name": "@mynolog/mini-fetch",
+  "version": "0.1.0",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown src/index.ts --dts --format esm,cjs --clean",
+    "dev": "tsdown src/index.ts --watch --clean"
+  },
+  "keywords": [
+    "fetch",
+    "api",
+    "typescript",
+    "minimal"
+  ],
+  "author": "mynolog <https://github.com/mynolog>",
+  "license": "ISC",
+  "description": "A minimal TypeScript fetch wrapper for API calls",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mynolog/mini-fetch.git"
+  },
+  "devDependencies": {
+    "tsdown": "^0.14.2",
+    "typescript": "^5.9.2"
+  }
+}
