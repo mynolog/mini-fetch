@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "tsdown src/index.ts --dts --format esm,cjs --clean",
-    "dev": "tsdown src/index.ts --watch --clean"
+    "dev": "tsdown src/index.ts --watch --clean",
+    "lint": "eslint ."
   },
   "keywords": [
     "fetch",
@@ -26,7 +27,16 @@
     "url": "git+https://github.com/mynolog/mini-fetch.git"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
     "tsdown": "^0.14.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.41.0"
   }
 }
