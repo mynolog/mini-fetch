@@ -8,7 +8,7 @@ export interface MiniFetchOptions<B = any> extends Omit<RequestInit, 'body' | 'm
   timeout?: number
 }
 
-export type MiniFetchApi = {
+export interface MiniFetchApi {
   get: <T = any>(url: string, options?: MiniFetchOptions) => Promise<T>
   post: <T = any>(url: string, options?: MiniFetchOptions) => Promise<T>
   put: <T = any>(url: string, options?: MiniFetchOptions) => Promise<T>
