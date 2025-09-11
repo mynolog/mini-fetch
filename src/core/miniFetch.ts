@@ -1,11 +1,14 @@
-import type { MiniFetchOptions } from '../types/MiniFetch'
+import type { MiniFetchOptions, MiniFetchResponse } from '../types/MiniFetch'
 import { HttpError, TimeoutError, FetchError } from '../errors/MiniFetchError'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function miniFetch<T = any>(url: string, options?: MiniFetchOptions): Promise<T> {
+export async function miniFetch<T = any>(
+  url: string,
+  options?: MiniFetchOptions,
+): Promise<MiniFetchResponse<T>> {
   const {
     autoParseJson = true,
-    timeout = 5000,
+    timeout = 0,
     method = 'GET',
     body,
     headers,
@@ -36,7 +39,9 @@ export async function miniFetch<T = any>(url: string, options?: MiniFetchOptions
       throw new HttpError(method, url, response.status)
     }
 
-    return autoParseJson ? ((await response.json()) as T) : (response as unknown as T)
+    const data = autoParseJson ? await response.json() : undefined
+    const miniResponse: MiniFetchResponse<T> = Object.assign(response, { data })
+    return miniResponse
   } catch (error: unknown) {
     if (!(error instanceof Error)) {
       throw error
