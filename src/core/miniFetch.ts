@@ -16,10 +16,11 @@ export async function miniFetch<T = any>(
   } = options || {}
 
   const abortController = new AbortController()
-  const abortTimer: ReturnType<typeof setTimeout> = setTimeout(
-    () => abortController.abort(),
-    timeout,
-  )
+  let abortTimer: ReturnType<typeof setTimeout> | null = null
+  if (timeout > 0) {
+    abortTimer = setTimeout(() => abortController.abort(), timeout)
+  }
+
   try {
     const mergedHeaders: HeadersInit = {
       'Content-Type': 'application/json',
@@ -51,6 +52,6 @@ export async function miniFetch<T = any>(
     }
     throw new FetchError(error.message)
   } finally {
-    clearTimeout(abortTimer)
+    if (abortTimer !== null) clearTimeout(abortTimer)
   }
 }
