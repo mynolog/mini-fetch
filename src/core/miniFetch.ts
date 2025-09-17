@@ -47,7 +47,11 @@ export async function miniFetch<T = any>(
     if (!(error instanceof Error)) {
       throw error
     }
-    if (error.name === 'AbortError') {
+    if (
+      error.name === 'AbortError' ||
+      error.message.includes('aborted') ||
+      error instanceof DOMException
+    ) {
       throw new TimeoutError(method, url, timeout)
     }
     throw new FetchError(error.message)
