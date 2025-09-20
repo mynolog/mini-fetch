@@ -1,5 +1,6 @@
 import type { MiniFetchOptions, MiniFetchResponse } from '../types/MiniFetch'
 import { HttpError, TimeoutError, FetchError } from '../errors/MiniFetchError'
+import { isSerializable } from '../utils/bodySerializer'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function miniFetch<T = any>(
@@ -22,11 +23,18 @@ export async function miniFetch<T = any>(
   }
 
   try {
-    const mergedHeaders: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...(headers || {}),
+    const mergedHeaders = new Headers(headers)
+    let requestBody: BodyInit | undefined
+    if (method !== 'GET' && body !== undefined) {
+      if (isSerializable(body)) {
+        requestBody = JSON.stringify(body)
+        if (!mergedHeaders.has('Content-Type')) {
+          mergedHeaders.set('Content-Type', 'application/json')
+        }
+      } else {
+        requestBody = body as BodyInit
+      }
     }
-    const requestBody = method !== 'GET' ? JSON.stringify(body) : undefined
 
     const response = await fetch(url, {
       method,
@@ -47,11 +55,7 @@ export async function miniFetch<T = any>(
     if (!(error instanceof Error)) {
       throw error
     }
-    if (
-      error.name === 'AbortError' ||
-      error.message.includes('aborted') ||
-      error instanceof DOMException
-    ) {
+    if (error.name === 'AbortError' || error.message.includes('aborted')) {
       throw new TimeoutError(method, url, timeout)
     }
     throw new FetchError(error.message)
